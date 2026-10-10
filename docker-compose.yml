@@ -1,0 +1,58 @@
+# docker-compose.yml
+networks:
+  web:
+    name: web
+    external: false
+  internal:
+    name: internal
+    external: false
+
+services:
+  traefik:
+    image: docker.io/library/traefik:v3.1
+    container_name: traefik
+    restart: always
+    labels:
+      - "io.containers.autoupdate=registry"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Bind user-space Podman socket (XDG_RUNTIME_DIR default UID 1000)
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
+      - ./config/traefik/traefik.yaml:/traefik.yaml:ro
+      - ./config/traefik/traefik_dynamic.yaml:/traefik_dynamic.yaml:ro
+      - ./config/traefik/acme.json:/letsencrypt/acme.json
+    networks:
+      - web
+      - internal
+
+  vaultwarden:
+    image: docker.io/vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    labels:
+      - "io.containers.autoupdate=registry"
+      - "traefik.enable=true"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vault.hostname.cc`)"
+      - "traefik.http.routers.vaultwarden.service=vaultwarden"
+      - "traefik.http.routers.vaultwarden.entrypoints=websecure"
+      - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
+      - "traefik.http.routers.vaultwarden.tls=true"
+      - "traefik.http.routers.vaultwarden.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.vaultwarden.loadbalancer.passhostheader=true"
+      - "traefik.http.routers.vaultwarden.middlewares=compresstraefik"
+      - "traefik.http.routers.vaultwarden.middlewares=my-GeoBlock@file"
+      - "traefik.http.middlewares.compresstraefik.compress=true"
+    environment:
+      - DOMAIN=https://vault.hostname.cc
+      - LOG_FILE=/data/access.log
+      - SIGNUPS_DOMAINS_WHITELIST=hostname.cc
+      - SIGNUPS_VERIFY=true
+      - ADMIN_TOKEN=${VW_ADMIN_TOKEN}
+    volumes:
+      - ./config/vaultwarden:/data
+    networks:
+      - internal
+    depends_on:
+      - traefik

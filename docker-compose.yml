@@ -33,7 +33,7 @@ services:
       # Basic Auth Middleware definition from .env
       - "traefik.http.middlewares.simpleAuth.basicauth.users=${TRAEFIK_BASIC_AUTH_USERS}"
       # Dashboard Router protected by simpleAuth
-      - "traefik.http.routers.api.rule=Host(`monitor.hostname.cc`)"
+      - "traefik.http.routers.api.rule=Host(`monitor.${STACK_HOSTNAME}`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=simpleAuth"
@@ -59,7 +59,7 @@ services:
     labels:
       - "io.containers.autoupdate=registry"
       - "traefik.enable=true"
-      - "traefik.http.routers.vaultwarden.rule=Host(`vault.hostname.cc`)"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vault.${STACK_HOSTNAME}`)"
       - "traefik.http.routers.vaultwarden.service=vaultwarden"
       - "traefik.http.routers.vaultwarden.entrypoints=websecure"
       - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
@@ -70,9 +70,9 @@ services:
       - "traefik.http.routers.vaultwarden.middlewares=my-GeoBlock@file"
       - "traefik.http.middlewares.compresstraefik.compress=true"
     environment:
-      - DOMAIN=https://vault.hostname.cc
+      - DOMAIN=https://vault.${STACK_HOSTNAME}
       - LOG_FILE=/data/access.log
-      - SIGNUPS_DOMAINS_WHITELIST=hostname.cc
+      - SIGNUPS_DOMAINS_WHITELIST=${STACK_HOSTNAME}
       - SIGNUPS_VERIFY=true
       - ADMIN_TOKEN=${VW_ADMIN_TOKEN}
     volumes:

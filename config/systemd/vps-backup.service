@@ -1,0 +1,7 @@
+[Unit]
+Description=Vaultwarden Encrypted pCloud Backup
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/vps-stack
+ExecStart=/nix/var/nix/profiles/default/bin/nix run .#backup

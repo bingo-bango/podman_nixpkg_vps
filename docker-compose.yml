@@ -29,6 +29,16 @@ services:
     restart: always
     labels:
       - "io.containers.autoupdate=registry"
+      - "traefik.enable=true"
+      # Basic Auth Middleware definition from .env
+      - "traefik.http.middlewares.simpleAuth.basicauth.users=${TRAEFIK_BASIC_AUTH_USERS}"
+      # Dashboard Router protected by simpleAuth
+      - "traefik.http.routers.api.rule=Host(`monitor.hostname.cc`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=simpleAuth"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=lets-encrypt"
     ports:
       - "80:80"
       - "443:443"

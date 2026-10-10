@@ -1,0 +1,70 @@
+http:
+  middlewares:
+    simpleAuth:
+      basicAuth:
+        users:
+          - 'admin:$apr1$VIZVuNcXf$FpmLXfQfwsRQXuf6JPUzxf3fvT1'
+    my-GeoBlock:
+      plugin:
+        geoblock:
+          silentStartUp: false
+          allowLocalRequests: true
+          logLocalRequests: false
+          logAllowedRequests: false
+          logApiRequests: false
+          api: "https://get.geojs.io/v1/ip/country/{ip}"
+          apiTimeoutMs: 500
+          cacheSize: 25
+          forceMonthlyUpdate: true
+          allowUnknownCountries: false
+          unknownCountryApiResponse: "nil"
+          countries:
+            - AD # Andorra
+            - FR # France
+            - DE # Germany
+            - ES # Spain
+            # - MX # Mexico
+            - GB # United Kingdom of Great Britain and Northern Ireland (the)
+            # - US # United States of America (the)
+  routers:
+    api:
+      rule: Host(`monitor.hostname.cc`)
+      entrypoints:
+        - websecure
+      middlewares:
+        - simpleAuth
+      service: api@internal
+      tls:
+        certResolver: lets-encrypt
+    router-homeassistant:
+      entryPoints:
+        - websecure
+      middlewares:
+        - my-GeoBlock@file
+      rule: Host(`ha.hostname.cc`)
+      service: service-homeassistant
+      tls:
+        certResolver: lets-encrypt
+    router-nextcloud:
+      entryPoints:
+        - websecure
+      middlewares:
+        - my-GeoBlock@file
+      rule: Host(`nuage.hostname.cc`)
+      service: service-nextcloud
+      tls:
+        certResolver: lets-encrypt
+  serversTransports:
+    externaltransport:
+      insecureSkipVerify: true
+  services:
+    service-homeassistant:
+      loadBalancer:
+        servers:
+        - url: "https://myurl.duckdns.org:9444/"
+        serversTransport: externaltransport
+    service-nextcloud:
+      loadBalancer:
+        servers:
+        - url: "https://myurl.duckdns.org:9443"
+        serversTransport: externaltransport

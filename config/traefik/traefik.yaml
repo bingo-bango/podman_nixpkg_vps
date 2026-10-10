@@ -1,0 +1,36 @@
+experimental:
+  plugins:
+    geoblock:
+      moduleName: "github.com/PascalMinder/geoblock"
+      version: "v0.2.8"
+
+entryPoints:
+  web:
+    address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+      middlewares:
+        - my-GeoBlock@file
+  websecure:
+    address: ':443'
+
+api:
+  dashboard: true
+
+certificatesResolvers:
+  lets-encrypt:
+    acme:
+      email: web.letsencrypt@hostname.cc
+      storage: /letsencrypt/acme.json
+      tlsChallenge: {}
+
+providers:
+  docker:
+    watch: true
+    network: web
+    exposedByDefault: false
+  file:
+    filename: /traefik_dynamic.yaml

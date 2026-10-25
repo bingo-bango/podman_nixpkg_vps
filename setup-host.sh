@@ -18,6 +18,8 @@ apt update && apt install -y \
   dbus-user-session \
   systemd-container \
   slirp4netns \
+  screen \
+  ufw \
   fuse-overlayfs
 
 echo "==> 2. Setting up 'dockuser' account and lingering..."
@@ -51,6 +53,24 @@ machinectl shell dockuser@.host /bin/bash -c "
   export XDG_RUNTIME_DIR=/run/user/${DOCKUSER_UID}
   systemctl --user enable --now podman.socket
 "
+
+echo "==> 5. Configuring UFW firewall..."
+
+# Default policies
+ufw default deny incoming
+ufw default allow outgoing
+
+# Essential access
+ufw allow 4422/tcp comment 'SSH'
+ufw allow 80/tcp comment 'HTTP (Traefik redirect)'
+ufw allow 443/tcp comment 'HTTPS (Traefik)'
+ufw allow 51456/udp comment 'WireGuard'
+
+# Enable (non-interactive)
+ufw --force enable
+
+echo "Firewall status:"
+ufw status verbose
 
 echo ""
 echo "=========================================================="

@@ -7,7 +7,7 @@ cd "${SCRIPT_DIR}"
 # 1. Validate environment file
 if [ ! -f .env ]; then
   echo "Error: .env file missing in repository root."
-  echo "Please copy .env.template to .env and configure your secrets before running."
+  echo "Please ensure that .env exists and configure your secrets before running."
   exit 1
 fi
 

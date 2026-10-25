@@ -2,7 +2,7 @@
 VPS setup for Podman
 
 ## 1. Repo Setup
-After booting into a freshly installed Debian 12 OS, run the following to install git and clone this repo:
+After booting into a freshly installed Debian 12 OS, run the following as root to install git and clone this repo:
 ```
 apt update && apt install -y git
 git clone https://github.com/bingo-bango/podman_nixpkg_vps.git /opt/vps-stack

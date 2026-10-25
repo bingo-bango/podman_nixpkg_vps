@@ -13,7 +13,7 @@ entryPoints:
           to: websecure
           scheme: https
       middlewares:
-        - my-GeoBlock@file
+        - my-GeoBlock@docker
   websecure:
     address: ':443'
 
@@ -23,7 +23,6 @@ api:
 certificatesResolvers:
   lets-encrypt:
     acme:
-      email: web.letsencrypt@hostname.cc
       storage: /letsencrypt/acme.json
       tlsChallenge: {}
 
@@ -32,5 +31,3 @@ providers:
     watch: true
     network: web
     exposedByDefault: false
-  file:
-    filename: /traefik_dynamic.yaml

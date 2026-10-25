@@ -15,8 +15,8 @@ services:
       - NET_ADMIN
       - SYS_MODULE
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TIMEZONE}
     volumes:
       - ./config/wireguard:/config
@@ -75,8 +75,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # Bind user-space Podman socket (XDG_RUNTIME_DIR default UID 1000)
-      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
+      # Bind user-space Podman socket (XDG_RUNTIME_DIR default UID 100x)
+      - ${XDG_RUNTIME_DIR}/podman/podman.sock:/var/run/docker.sock:ro
       - ./config/traefik/traefik.yaml:/traefik.yaml:ro
       - ./config/traefik/acme.json:/letsencrypt/acme.json
     networks:

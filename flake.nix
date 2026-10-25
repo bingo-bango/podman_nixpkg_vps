@@ -91,7 +91,7 @@
             ${pkgs.podman-compose}/bin/podman-compose down || true
 
             echo "Fetching latest backup listing from pCloud..."
-            LATEST_FILE=$(${pkgs.rclone}/bin/rclone lsf pcloud:/Backups/Vaultwarden/ --sort name | tail -n 1)
+            LATEST_FILE=$(${pkgs.rclone}/bin/rclone lsf pcloud:/Backups/Vaultwarden/ | sort | tail -n 1)
 
             if [ -z "$LATEST_FILE" ]; then
               echo "Error: No backups found in pCloud!"

@@ -12,14 +12,14 @@ cd /opt/vps-stack
 *Verification*: Run `pwd` to confirm you are in `/opt/vps-stack` and `git status` to verify your repository files are present.
 
 ## 2. Secrets and access
-Update the .env file in your repository root (/opt/vps-stack/.env) with the correct values.
-Update the `VPS_PRIVATE_KEY` and `HOME_SERVER_PUBLIC_KEY` values in config/wireguard/wg_confs/wg0.conf with their correct values.
-Put your SSH public key in `~/.ssh/authorized_keys` - *important* so you don't get locked out during the next steps.
+ - Update the .env file in your repository root (/opt/vps-stack/.env) with the correct values.
+ - Put your SSH public key in `~/.ssh/authorized_keys` - *important* so you don't get locked out during the next steps.
+ - Update the `VPS_PRIVATE_KEY` and `HOME_SERVER_PUBLIC_KEY` values in config/wireguard/wg_confs/wg0.conf with their correct values.
 
 ## 3. System setup
 Run:
 ```
-sudo bash setup-host.sh
+bash setup-host.sh
 ```
 Then switch to `dockuser` and run the boot strap:
 ```

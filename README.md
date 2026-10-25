@@ -23,6 +23,6 @@ bash setup-host.sh
 ```
 Then switch to `dockuser` and run the boot strap:
 ```
-sudo su - dockuser
+machinectl shell dockuser@
 bash bootstrap.sh
 ```

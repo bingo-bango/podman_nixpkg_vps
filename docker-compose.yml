@@ -39,6 +39,37 @@ services:
       - "traefik.http.routers.api.middlewares=simpleAuth"
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=lets-encrypt"
+      # GeoBlock middleware (plugin)
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.silentStartUp=false"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.allowLocalRequests=true"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.logLocalRequests=false"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.logAllowedRequests=false"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.logApiRequests=false"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.api=https://get.geojs.io/v1/ip/country/{ip}"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.apiTimeoutMs=500"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.cacheSize=25"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.forceMonthlyUpdate=true"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.allowUnknownCountries=false"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.unknownCountryApiResponse=nil"
+      - "traefik.http.middlewares.my-GeoBlock.plugin.geoblock.countries=${GEOBLOCK_COUNTRIES}"
+      # Home Assistant
+      - "traefik.http.routers.homeassistant.rule=Host(`ha.${STACK_HOSTNAME}`)"
+      - "traefik.http.routers.homeassistant.entrypoints=websecure"
+      - "traefik.http.routers.homeassistant.middlewares=my-GeoBlock"
+      - "traefik.http.routers.homeassistant.tls=true"
+      - "traefik.http.routers.homeassistant.tls.certresolver=lets-encrypt"
+      - "traefik.http.routers.homeassistant.service=homeassistant"
+      - "traefik.http.services.homeassistant.loadbalancer.server.url=https://10.13.13.2:9444"
+      - "traefik.http.services.homeassistant.loadbalancer.serversTransport=externaltransport"
+      # Nextcloud
+      - "traefik.http.routers.nextcloud.rule=Host(`nuage.${STACK_HOSTNAME}`)"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.middlewares=my-GeoBlock"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.routers.nextcloud.tls.certresolver=lets-encrypt"
+      - "traefik.http.routers.nextcloud.service=nextcloud"
+      - "traefik.http.services.nextcloud.loadbalancer.server.url=https://10.13.13.2:9443"
+      - "traefik.http.services.nextcloud.loadbalancer.serversTransport=externaltransport"
     ports:
       - "80:80"
       - "443:443"
@@ -46,7 +77,6 @@ services:
       # Bind user-space Podman socket (XDG_RUNTIME_DIR default UID 1000)
       - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
       - ./config/traefik/traefik.yaml:/traefik.yaml:ro
-      - ./config/traefik/traefik_dynamic.yaml:/traefik_dynamic.yaml:ro
       - ./config/traefik/acme.json:/letsencrypt/acme.json
     networks:
       - web

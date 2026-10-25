@@ -19,9 +19,9 @@ Put your SSH public key in `~/.ssh/authorized_keys` - *important* so you don't g
 ## 3. System setup
 Run:
 ```
-sudo bash bootstrap.sh
-```
-Then run:
-```
 sudo bash setup-host.sh
+```
+Then run as `dockuser`:
+```
+sudo bash bootstrap.sh
 ```

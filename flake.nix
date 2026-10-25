@@ -41,6 +41,7 @@
             export XDG_RUNTIME_DIR="/run/user/${PUID}"
             ${pkgs.podman-compose}/bin/podman-compose up -d
           '');
+        };
 
         # Stop container stack
         down = {

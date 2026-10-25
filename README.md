@@ -21,7 +21,8 @@ Run:
 ```
 sudo bash setup-host.sh
 ```
-Then run as `dockuser`:
+Then switch to `dockuser` and run the boot strap:
 ```
-sudo bash bootstrap.sh
+sudo su - dockuser
+bash bootstrap.sh
 ```

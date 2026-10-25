@@ -1,1 +1,2 @@
 .env
+config/wireguard/wg_confs/wg0.conf

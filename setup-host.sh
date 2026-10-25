@@ -20,6 +20,7 @@ apt update && apt install -y \
   slirp4netns \
   screen \
   ufw \
+  openssh-server \
   fuse-overlayfs
 
 echo "==> 2. Setting up 'dockuser' account and lingering..."
@@ -71,6 +72,29 @@ ufw --force enable
 
 echo "Firewall status:"
 ufw status verbose
+
+echo "==> 6. Configuring OpenSSH..."
+
+# Backup original config
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$(date +%F)
+
+# Set port and basic hardening
+cat > /etc/ssh/sshd_config.d/99-vps.conf <<'EOF'
+Port 4422
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+ChallengeResponseAuthentication no
+UsePAM yes
+X11Forwarding no
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem sftp /usr/lib/openssh/sftp-server
+EOF
+
+# Validate config and restart
+sshd -t && systemctl restart ssh
+echo "OpenSSH now listening on port 4422"
 
 echo ""
 echo "=========================================================="

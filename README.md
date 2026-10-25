@@ -12,9 +12,15 @@ cd /opt/vps-stack
 *Verification*: Run `pwd` to confirm you are in `/opt/vps-stack` and `git status` to verify your repository files are present.
 
 ## 2. Secrets
-Create a .env file in your repository root (/opt/vps-stack/.env):
+Update the .env file in your repository root (/opt/vps-stack/.env) with the correct values.
+Update the `VPS_PRIVATE_KEY` and `HOME_SERVER_PUBLIC_KEY` values in config/wireguard/wg_confs/wg0.conf with their correct values.
+
+## 3. System setup
+Run:
 ```
-# /opt/vps-stack/.env
-VPS_PRIVATE_KEY="YOUR_ACTUAL_VPS_PRIVATE_KEY"
-HOME_SERVER_PUBLIC_KEY="YOUR_ACTUAL_HOME_SERVER_PUBLIC_KEY"
+sudo bash bootstrap.sh
+```
+Then run:
+```
+sudo bash setup-host.sh
 ```

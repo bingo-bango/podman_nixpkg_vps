@@ -109,7 +109,7 @@ echo "=========================================================="
 echo " Host setup successful!"
 echo "=========================================================="
 echo "To complete deployment, run:"
-echo "  1. su - dockuser"
+echo "  1. machinectl shell dockuser@
 echo "  2. cd /opt/vps-stack"
 echo "  3. bash bootstrap.sh"
 echo "=========================================================="

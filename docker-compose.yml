@@ -60,7 +60,6 @@ services:
       - "traefik.http.routers.homeassistant.tls.certresolver=lets-encrypt"
       - "traefik.http.routers.homeassistant.service=homeassistant"
       - "traefik.http.services.homeassistant.loadbalancer.server.url=https://10.13.13.2:9444"
-      - "traefik.http.services.homeassistant.loadbalancer.serversTransport=externaltransport"
       # Nextcloud
       - "traefik.http.routers.nextcloud.rule=Host(`nuage.${STACK_HOSTNAME}`)"
       - "traefik.http.routers.nextcloud.entrypoints=websecure"
@@ -69,7 +68,6 @@ services:
       - "traefik.http.routers.nextcloud.tls.certresolver=lets-encrypt"
       - "traefik.http.routers.nextcloud.service=nextcloud"
       - "traefik.http.services.nextcloud.loadbalancer.server.url=https://10.13.13.2:9443"
-      - "traefik.http.services.nextcloud.loadbalancer.serversTransport=externaltransport"
     ports:
       - "80:80"
       - "443:443"
@@ -97,7 +95,7 @@ services:
       - "traefik.http.routers.vaultwarden.tls.certresolver=lets-encrypt"
       - "traefik.http.services.vaultwarden.loadbalancer.passhostheader=true"
       - "traefik.http.routers.vaultwarden.middlewares=compresstraefik"
-      - "traefik.http.routers.vaultwarden.middlewares=my-GeoBlock@file"
+      - "traefik.http.routers.vaultwarden.middlewares=my-GeoBlock"
       - "traefik.http.middlewares.compresstraefik.compress=true"
     environment:
       - DOMAIN=https://vault.${STACK_HOSTNAME}

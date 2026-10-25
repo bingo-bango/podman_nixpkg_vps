@@ -15,6 +15,7 @@ fi
 mkdir -p config/traefik config/vaultwarden config/systemd
 touch config/traefik/acme.json
 chmod 600 config/traefik/acme.json
+chmod 600 config/wireguard/wg_confs/wg0.conf
 
 # 3. Link systemd user units and enable daily automated backups
 echo "Configuring automated backup timer..."

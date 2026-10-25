@@ -27,6 +27,8 @@ services:
     image: docker.io/library/traefik:v3.1
     container_name: traefik
     restart: always
+    command:
+      - --certificatesresolvers.lets-encrypt.acme.email=${ACME_EMAIL}
     labels:
       - "io.containers.autoupdate=registry"
       - "traefik.enable=true"

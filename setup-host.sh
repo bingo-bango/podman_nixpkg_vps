@@ -35,6 +35,14 @@ usermod --add-subuids 100000-165535 --add-subgids 100000-165535 dockuser || true
 # Keep user-level systemd daemons alive on boot without an active SSH session
 loginctl enable-linger dockuser
 
+# Fix ownership of /opt/vps-stack for dockuser
+if [ -d /opt/vps-stack ]; then
+  chown -R dockuser:dockuser /opt/vps-stack
+  echo "Ownership of /opt/vps-stack transferred to dockuser."
+else
+  echo "Warning: /opt/vps-stack not found — clone the repo first."
+fi
+
 echo "==> 3. Installing Nix via Determinate Installer..."
 if [ ! -d "/nix" ]; then
   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm

@@ -8,22 +8,6 @@ networks:
     external: false
 
 services:
-  wireguard:
-    image: lscr.io/linuxserver/wireguard:latest
-    container_name: wireguard
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
-    volumes:
-      - ./config/wireguard:/config
-    ports:
-      - "51456:51456/udp"
-    network_mode: host
-    restart: always
   traefik:
     image: docker.io/library/traefik:v3.1
     container_name: traefik

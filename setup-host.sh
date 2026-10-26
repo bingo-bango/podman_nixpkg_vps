@@ -21,7 +21,9 @@ apt update && apt install -y \
   screen \
   ufw \
   openssh-server \
-  fuse-overlayfs
+  fuse-overlayfs \
+  wireguard-tools \
+  kmod
 
 echo "==> 2. Setting up 'dockuser' account and lingering..."
 if ! id -u dockuser &>/dev/null; then
@@ -106,6 +108,13 @@ EOF
 # Validate config and restart
 sshd -t && systemctl restart ssh
 echo "OpenSSH now listening on port 4422"
+
+echo "==> 7. Configuring host WireGuard..."
+if [ -f "${SCRIPT_DIR:-.}/setup-wg.sh" ]; then
+  bash "${SCRIPT_DIR:-.}/setup-wg.sh"
+else
+  echo "Note: run ./setup-wg.sh manually after filling .env"
+fi
 
 echo ""
 echo "=========================================================="

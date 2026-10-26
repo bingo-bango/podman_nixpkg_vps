@@ -81,6 +81,10 @@ ufw --force enable
 echo "Firewall status:"
 ufw status verbose
 
+# Allow unprivileged processes to bind ports >= 80
+echo 'net.ipv4.ip_unprivileged_port_start=80' > /etc/sysctl.d/99-rootless-ports.conf
+sysctl --system
+
 echo "==> 6. Configuring OpenSSH..."
 
 # Backup original config

@@ -25,7 +25,7 @@ fi
 # Ensure tools + module
 apt-get update
 apt-get install -y wireguard-tools kmod
-modprobe wireguard || true
+/sbin/modprobe wireguard || true
 echo wireguard > /etc/modules-load.d/wireguard.conf
 
 mkdir -p /etc/wireguard
@@ -47,7 +47,7 @@ chmod 600 /etc/wireguard/wg0.conf
 
 # IP forwarding
 grep -q '^net.ipv4.ip_forward=1' /etc/sysctl.conf || echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
-sysctl -w net.ipv4.ip_forward=1 >/dev/null
+/sbin/sysctl -w net.ipv4.ip_forward=1 >/dev/null
 
 # UFW already allows 51456/udp from setup-host.sh; ensure it
 ufw allow 51456/udp comment 'WireGuard' || true
